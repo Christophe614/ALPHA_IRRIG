@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>IrrigationSmart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <span class="logo">🌱</span>
+    <div>
+      <div class="header-title">IrrigationSmart</div>
+      <div class="header-sub">FabLab — Système IoT</div>
+    </div>
+  </div>
+  <div class="dot-wrap">
+    <div class="dot" id="dot"></div>
+    <span id="statut-txt">Connexion...</span>
+  </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('accueil',this)">
+    <span>🏠</span><small>Accueil</small>
+  </button>
+  <button class="nav-btn" onclick="showPage('capteurs',this)">
+    <span>📡</span><small>Capteurs</small>
+  </button>
+  <button class="nav-btn" onclick="showPage('historique',this)">
+    <span>📊</span><small>Historique</small>
+  </button>
+  <button class="nav-btn" onclick="showPage('parametres',this)">
+    <span>⚙️</span><small>Paramètres</small>
+  </button>
+</nav>
+
+<!-- ══ PAGE ACCUEIL ════════════════════════════════════════════ -->
+<div class="page active" id="page-accueil">
+
+  <div class="hero" id="hero">
+    <div class="hero-label">Humidité du Sol</div>
+    <div class="hero-val" id="h-sol">--</div>
+    <div class="hero-unit">%</div>
+    <div class="hero-bar-wrap">
+      <div class="hero-bar" id="hero-bar"></div>
+    </div>
+    <div class="hero-msg" id="h-msg">Chargement...</div>
+  </div>
+
+  <div class="edu-box" id="edu-box">
+    🌱 Le système surveille votre plantation en continu...
+  </div>
+
+  <button class="btn-water" id="btn-water" onclick="arroser()">
+    💧 ARROSER MAINTENANT
+  </button>
+
+  <div class="grid2">
+    <div class="mini-card">
+      <div class="mc-icon">🌡</div>
+      <div class="mc-label">Température</div>
+      <div class="mc-val" id="h-temp">--</div>
+      <div class="mc-unit">°C</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-icon">💨</div>
+      <div class="mc-label">Humidité Air</div>
+      <div class="mc-val" id="h-air">--</div>
+      <div class="mc-unit">%</div>
+    </div>
+    <div class="mini-card" id="mc-eau">
+      <div class="mc-icon">🪣</div>
+      <div class="mc-label">Réservoir</div>
+      <div class="mc-val" id="h-eau">--</div>
+      <div class="mc-unit">cm</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-icon">🔄</div>
+      <div class="mc-label">Arrosages</div>
+      <div class="mc-val" id="h-count">0</div>
+      <div class="mc-unit">cycles</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <span class="card-label">État Pompe</span>
+      <span class="badge off" id="badge-pompe">OFF</span>
+    </div>
+    <div class="card-row" style="margin-top:6px">
+      <span class="card-sub">Seuil déclenchement</span>
+      <span class="card-sub" style="color:#F4A92B">
+        <span id="h-seuil">30</span>%
+      </span>
+    </div>
+    <div class="card-row" style="margin-top:6px">
+      <span class="card-sub">IA — Besoin estimé</span>
+      <span class="card-sub" style="color:#95D5B2">
+        <span id="h-besoin">--</span> ml/jour
+      </span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PAGE CAPTEURS ═══════════════════════════════════════════ -->
+<div class="page" id="page-capteurs">
+
+  <div class="card">
+    <div class="sensor-row">
+      <div class="sr-icon" style="background:#1B4332">🌿</div>
+      <div class="sr-info">
+        <div class="sr-name">Humidité Sol</div>
+        <div class="sr-desc">YL-69 — GPIO 34 (Analogique)</div>
+      </div>
+      <div class="sr-val-wrap">
+        <div class="sr-val" id="c-sol">--</div>
+        <div class="sr-unit">%</div>
+      </div>
+    </div>
+
+    <div class="sensor-row">
+      <div class="sr-icon" style="background:#1a2a4a">🌡</div>
+      <div class="sr-info">
+        <div class="sr-name">Température Air</div>
+        <div class="sr-desc">DHT11 — GPIO 4</div>
+      </div>
+      <div class="sr-val-wrap">
+        <div class="sr-val" id="c-temp">--</div>
+        <div class="sr-unit">°C</div>
+      </div>
+    </div>
+
+    <div class="sensor-row">
+      <div class="sr-icon" style="background:#1a2a4a">💧</div>
+      <div class="sr-info">
+        <div class="sr-name">Humidité Air</div>
+        <div class="sr-desc">DHT11 — GPIO 4</div>
+      </div>
+      <div class="sr-val-wrap">
+        <div class="sr-val" id="c-air">--</div>
+        <div class="sr-unit">%</div>
+      </div>
+    </div>
+
+    <div class="sensor-row">
+      <div class="sr-icon" style="background:#0a2a3a">🔊</div>
+      <div class="sr-info">
+        <div class="sr-name">Niveau Eau</div>
+        <div class="sr-desc">HC-SR04 — GPIO 5 / 18</div>
+      </div>
+      <div class="sr-val-wrap">
+        <div class="sr-val" id="c-eau">--</div>
+        <div class="sr-unit">cm</div>
+      </div>
+    </div>
+
+    <div class="sensor-row">
+      <div class="sr-icon" style="background:#2a1a1a">⚡</div>
+      <div class="sr-info">
+        <div class="sr-name">Relais / Pompe</div>
+        <div class="sr-desc">SRD-5VDC — GPIO 26</div>
+      </div>
+      <div class="sr-val-wrap">
+        <div class="sr-val" id="c-pompe" style="font-size:15px">OFF</div>
+        <div class="sr-unit">statut</div>
+      </div>
+    </div>
+
+    <div class="sensor-row" style="border:none">
+      <div class="sr-icon" style="background:#2a2a0a">☀️</div>
+      <div class="sr-info">
+        <div class="sr-name">Alimentation</div>
+        <div class="sr-desc">Panneau 5V + TP4056 + Li-Ion</div>
+      </div>
+      <div class="sr-val-wrap">
+        <div class="sr-val" style="color:#F4A92B;font-size:14px">AUTO</div>
+        <div class="sr-unit">mode</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="margin-bottom:10px">BILAN GLOBALE</div>
+    <div class="ia-row">
+      <span class="ia-key">Moyenne humidité</span>
+      <span class="ia-val" id="ia-moy">-- %</span>
+    </div>
+    <div class="ia-row">
+      <span class="ia-key">Seuil adaptatif</span>
+      <span class="ia-val" id="ia-seuil">-- %</span>
+    </div>
+    <div class="ia-row">
+      <span class="ia-key">Tendance sol</span>
+      <span class="ia-val" id="ia-tend">--</span>
+    </div>
+    <div class="ia-row">
+      <span class="ia-key">Besoin estimé</span>
+      <span class="ia-val" id="ia-besoin">-- ml/j</span>
+    </div>
+    <div class="ia-row">
+      <span class="ia-key">Uptime système</span>
+      <span class="ia-val" id="ia-uptime">--</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PAGE HISTORIQUE ═════════════════════════════════════════ -->
+<div class="page" id="page-historique">
+
+  <div class="card">
+    <div class="chart-title">📈 Humidité Sol — Temps réel</div>
+    <canvas id="chart-sol" height="160"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="chart-title">🌡 Température — Temps réel</div>
+    <canvas id="chart-temp" height="120"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="chart-title">💧 Journal des arrosages</div>
+    <div id="log-arrosages">
+      <div class="empty-log">Aucun arrosage enregistré</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PAGE PARAMETRES ════════════════════════════════════════ -->
+<div class="page" id="page-parametres">
+
+  <div class="card">
+    <div class="card-label" style="margin-bottom:12px">⚙️ Réglages Irrigation</div>
+
+    <div class="param-row">
+      <div>
+        <div class="param-name">Seuil arrosage</div>
+        <div class="param-sub">Humidité min avant déclenchement</div>
+      </div>
+      <div class="param-right">
+        <div class="param-val"><span id="p-seuil">30</span>%</div>
+        <input type="range" min="10" max="70" value="30" id="range-seuil"
+          oninput="updateSeuil(this.value)">
+      </div>
+    </div>
+
+    <div class="param-row">
+      <div>
+        <div class="param-name">Durée arrosage</div>
+        <div class="param-sub">Secondes par cycle</div>
+      </div>
+      <div class="param-right">
+        <div class="param-val"><span id="p-duree">30</span>s</div>
+        <input type="range" min="5" max="120" value="30"
+          oninput="document.getElementById('p-duree').textContent=this.value">
+      </div>
+    </div>
+
+    <div class="param-row" style="border:none">
+      <div>
+        <div class="param-name">Alerte réservoir</div>
+        <div class="param-sub">Distance max en cm</div>
+      </div>
+      <div class="param-right">
+        <div class="param-val"><span id="p-res">25</span>cm</div>
+        <input type="range" min="10" max="50" value="25"
+          oninput="document.getElementById('p-res').textContent=this.value">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="margin-bottom:12px">🌐 Réseau & Connexion</div>
+    <div class="info-row"><span>SSID Wi-Fi</span><span class="info-val">IrrigationSmart</span></div>
+    <div class="info-row"><span>Mot de passe</span><span class="info-val">fablab2024</span></div>
+    <div class="info-row"><span>Adresse IP</span><span class="info-val">192.168.4.1</span></div>
+    <div class="info-row" style="border:none"><span>Mode IA</span>
+      <span class="info-val" style="color:#52B788">ACTIF</span></div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div style="font-size:11px;color:#555;line-height:2">
+      IrrigationSmart v1.0 — FabLab<br>
+      ESP32 + YL-69 + DHT11 + HC-SR04<br>
+      Panneau solaire 5V — Autonomie totale<br>
+      <span style="color:#52B788;font-weight:700">Système opérationnel</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">IrrigationSmart · FabLab · 192.168.4.1</div>
+
+<script src="app.js"></script>
+</body>
+</html>
